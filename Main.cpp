@@ -20,7 +20,7 @@ int main(int argc, char ** argv) {
 	sf::Event event;
 	sf::IntRect rectSourceSprite(0, 0, 32, 32);
 	sf::Texture texture, zombieTexture;
-	sf::Clock clock, zombieClock;
+	sf::Clock clock, zombieClock, zombieClock2;
 	sf::Time elapsed;
 
 
@@ -161,6 +161,21 @@ int main(int argc, char ** argv) {
 			p1.setCanMoveLeft(true);
 			p1.setCanMoveRight(true);
 		}
+		//******************************************************
+		//Enemy collides with player
+		if (zombieClock2.getElapsedTime().asSeconds() >= 0.5)
+		{
+			zombieClock2.restart();
+			counter = 0;
+			for (iter4 = enemyArray.begin(); iter4 != enemyArray.end(); iter4++)
+			{
+				if (p1.rect.getGlobalBounds().intersects(enemyArray[counter].rect.getGlobalBounds()))
+				{
+					p1.healthReduction(enemyArray[counter].getAttackDamage());
+				}
+				counter++;
+			}
+		}
 		//**********************************************
 		//elapsed is to keep track of time to manage objects within game such as projectiles
 		//elapsed = clock.getElapsedTime();
@@ -192,6 +207,7 @@ int main(int argc, char ** argv) {
 			enemyArray[counter].update();
 			enemyArray[counter].updateMovement();
 			//window.draw(enemyArray[counter].rect);
+			renderWindow.draw(enemyArray[counter].getCircle());
 
 			renderWindow.draw(enemyArray[counter].sprite);
 

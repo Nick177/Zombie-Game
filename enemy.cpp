@@ -8,7 +8,7 @@
 
 #include "enemy.h"
 #include <random>
-#include<cstdlib>
+#include <cstdlib>
 
 using namespace sf;
 
@@ -17,19 +17,27 @@ using namespace sf;
 Enemy::Enemy()
 {
 	movementSpeed = 0.05;
-	attackDamage = 5;
+	attackDamage = 10;
 	counterWalking = 0;
 	direction = 0;
 	counter = 0;
-
-	alive = true;
 	hp = 5;
+	alive = true;
 
-	rect.setSize(sf::Vector2f(64, 64));
+	rect.setSize(sf::Vector2f(60, 64));
 	rect.setPosition(200, 200);
 	//sprite.setPosition(200, 200);
 	rect.setFillColor(sf::Color::Blue);
 	sprite.setTextureRect(IntRect(0, 0, 64, 64));
+
+
+	circle.setRadius(100);
+	circle.setFillColor(sf::Color::Red);
+
+	offset = 35 - (circle.getRadius());
+	circle.setPosition(rect.getPosition().x + offset, rect.getPosition().y + offset);
+
+
 
 	srand(time(NULL));
 }
@@ -38,6 +46,7 @@ Enemy::Enemy()
 void Enemy::update()
 {
 	sprite.setPosition(rect.getPosition());
+	circle.setPosition(rect.getPosition().x + offset, rect.getPosition().y + offset);
 }
 
 void Enemy::updateMovement()
@@ -85,7 +94,7 @@ void Enemy::updateMovement()
 	}
 
 	// Controls the speed of the animation (+ slower , - faster)
-	if (counter % 75 == 0)
+	if (counter % 100 == 0)
 		counterWalking++;
 
 	if (counterWalking == 3)
@@ -126,4 +135,10 @@ int Enemy::randomPositionY(int y)
 	random_device randomNumber;
 
 	return positionY(randomNumber);
+}
+void chase()
+{
+
+
+
 }
