@@ -12,12 +12,14 @@ class Enemy : public Entity
 {
 private:
 	float movementSpeed;
-	int attackDamage;
+	float attackDamage;
 	int counterWalking;
 	int direction; // 1 - up, 2 - down, 3 - left, 4 - right
 	int counter;
-	int hp;
+	float hp;
 	bool alive;
+	int offset;
+	CircleShape circle;
 
 public:
 	Enemy();
@@ -27,9 +29,11 @@ public:
 	int randomPositionX(int x);
 	int randomPositionY(int y);
 	void isDead() { alive = false; }
-	void setHP(int dmg) { this->hp = hp - dmg; }
-	int getHP()const { return hp; }
+	void setHP(float dmg) { this->hp = hp - dmg; }
+	float getHP()const { return hp; }
 	bool isAlive()const { return alive; }
+	float getAttackDamage()const { return attackDamage; }
+	CircleShape getCircle()const { return circle; }
 
 
 };
