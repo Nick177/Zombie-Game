@@ -21,6 +21,7 @@ private:
 	bool alive;
 	int offset;
 	CircleShape circle;
+	bool isPlayerInRange;
 
 public:
 	Enemy();
@@ -34,6 +35,9 @@ public:
 	float getHP()const { return hp; }
 	bool isAlive()const { return alive; }
 	float getAttackDamage()const { return attackDamage; }
+	int getDirection()const { return direction; }
+	void setDirection(int direction) { this->direction = direction; }
+	void setPlayerInRange(bool playerInRange) { this->isPlayerInRange = playerInRange; }
 	CircleShape getCircle()const { return circle; }
 
 	void attack(sf::Vector2f playerPosition);
