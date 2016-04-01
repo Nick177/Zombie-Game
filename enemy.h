@@ -4,6 +4,7 @@
 #define ENEMY_H
 
 #include "entity.h"
+#include<iostream>
 
 using namespace sf;
 using namespace std;
@@ -34,6 +35,8 @@ public:
 	bool isAlive()const { return alive; }
 	float getAttackDamage()const { return attackDamage; }
 	CircleShape getCircle()const { return circle; }
+
+	void attack(sf::Vector2f playerPosition);
 
 
 };

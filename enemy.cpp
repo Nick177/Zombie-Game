@@ -51,7 +51,6 @@ void Enemy::update()
 
 void Enemy::updateMovement()
 {
-
 	if ((direction) == 1)
 	{
 		rect.move(0, -movementSpeed); // up
