@@ -3,7 +3,7 @@ Player::Player()
 {
 	health = 100.0;
 	isAlive = true;
-	movementSpeed = 0.4;
+	movementSpeed = 0.07;
 	counterWalking = 0;
 	direction = 0;
 
