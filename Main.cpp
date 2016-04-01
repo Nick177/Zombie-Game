@@ -9,8 +9,10 @@
 #include "enemy.h"
 //#include "statusBar.h"
 #include "healthBar.h"
+#include <random>
 
 using namespace sf;
+using namespace std;
 
 int main(int argc, char ** argv) {
 	sf::RenderWindow renderWindow(sf::VideoMode(1366, 768), "Demo Game");
@@ -190,22 +192,74 @@ int main(int argc, char ** argv) {
 
 		//*************************************************************
 		// Creating a new enemy every 2 seconds
-		if (zombieClock.getElapsedTime().asMilliseconds() == 2000 /*&& (enemyArray.size() < 10)*/)
+		if (zombieClock.getElapsedTime().asMilliseconds() == 5000 /*&& (enemyArray.size() < 10)*/)
 		{
 			enemy1.rect.setPosition(enemy1.randomPositionX(renderWindow.getSize().x),
-				enemy1.randomPositionY(renderWindow.getSize().y));
+			enemy1.randomPositionY(renderWindow.getSize().y));
 
 			enemyArray.emplace_back(enemy1);
 			zombieClock.restart();
 		}
 
 		//****************************************************************
-		// Draw enemies to screen
+		// Draw enemies to screen and chases player if within range of the enemy
 		counter = 0;
 		for (iter4 = enemyArray.begin(); iter4 != enemyArray.end(); iter4++)
 		{
 			enemyArray[counter].update();
-			enemyArray[counter].updateMovement();
+
+			if (enemyArray[counter].getCircle().getGlobalBounds().intersects(p1.rect.getGlobalBounds()))
+			{
+				enemyArray[counter].setPlayerInRange(true);
+				//cout << "Within enemy range.\n";
+				
+
+
+				if (p1.rect.getPosition().x < enemyArray[counter].rect.getPosition().x)
+				{
+					enemyArray[counter].setDirection(3);
+				}
+				else if (p1.rect.getPosition().x > enemyArray[counter].rect.getPosition().x)
+				{
+					enemyArray[counter].setDirection(4);
+				}
+				else if (p1.rect.getPosition().y < enemyArray[counter].rect.getPosition().y)
+				{
+					enemyArray[counter].setDirection(1);
+				}
+				else if (p1.rect.getPosition().y > enemyArray[counter].rect.getPosition().y)
+				{
+					enemyArray[counter].setDirection(2);
+				}
+
+				enemyArray[counter].updateMovement();
+				
+				if (p1.rect.getPosition().y < enemyArray[counter].rect.getPosition().y)
+				{
+					enemyArray[counter].setDirection(1);
+				}
+				else if (p1.rect.getPosition().y > enemyArray[counter].rect.getPosition().y)
+				{
+					enemyArray[counter].setDirection(2);
+				}
+				else if (p1.rect.getPosition().x < enemyArray[counter].rect.getPosition().x)
+				{
+					enemyArray[counter].setDirection(3);
+				}
+				else if (p1.rect.getPosition().x > enemyArray[counter].rect.getPosition().x)
+				{
+					enemyArray[counter].setDirection(4);
+				}
+
+				enemyArray[counter].updateMovement();
+				
+			}
+			else
+			{
+				enemyArray[counter].setPlayerInRange(false);
+				enemyArray[counter].updateMovement();
+
+			}
 			//window.draw(enemyArray[counter].rect);
 			renderWindow.draw(enemyArray[counter].getCircle());
 

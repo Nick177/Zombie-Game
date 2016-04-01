@@ -104,7 +104,8 @@ void Enemy::updateMovement()
 
 	counter++;
 
-	if (counter >= 2000)
+	//Increasing the number will cause the enemy to move a longer distance in a certain direction
+	if (counter >= 2000 && !isPlayerInRange)
 	{
 		direction = rand();
 		counter = 0;
@@ -116,7 +117,8 @@ void Enemy::updateMovement()
 
 int Enemy::rand()
 {
-	uniform_int_distribution<int> randomMovement(0, 10);
+	//increasing the range will cause the enemy to move less often
+	uniform_int_distribution<int> randomMovement(0, 15);
 	random_device rand;
 
 
