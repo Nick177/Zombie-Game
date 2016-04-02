@@ -40,8 +40,5 @@ public:
 	void setPlayerInRange(bool playerInRange) { this->isPlayerInRange = playerInRange; }
 	CircleShape getCircle()const { return circle; }
 
-	void attack(sf::Vector2f playerPosition);
-
-
 };
 #endif

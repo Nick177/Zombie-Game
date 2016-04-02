@@ -3,7 +3,7 @@ Player::Player()
 {
 	health = 100.0;
 	isAlive = true;
-	movementSpeed = 0.07;
+	movementSpeed = 0.3;
 	counterWalking = 0;
 	direction = 0;
 
@@ -45,28 +45,28 @@ void Player::updateMovement()//int mX, int mY)
 	if (upKeyPressed && rightKeyPressed && !downKeyPressed && !leftKeyPressed)
 	{
 		rect.move(movementSpeed, -movementSpeed);
-		sprite.setTextureRect(sf::IntRect(counterWalking * 32, 32 * 3, 32, 32));
+		sprite.setTextureRect(sf::IntRect(counterWalking * 32, 32 * 6, 32, 32));
 		direction = 3;
 		ableToMoveDown = true;
 	}
 	if (upKeyPressed && leftKeyPressed && !rightKeyPressed && !downKeyPressed)
 	{
 		rect.move(-movementSpeed, -movementSpeed);
-		sprite.setTextureRect(sf::IntRect(counterWalking * 32, 32 * 3, 32, 32));
+		sprite.setTextureRect(sf::IntRect(counterWalking * 32, 32 * 6, 32, 32));
 		direction = 4;
 		ableToMoveDown = true;
 	}
 	if (downKeyPressed && rightKeyPressed && !upKeyPressed && !leftKeyPressed)
 	{
 		rect.move(movementSpeed, movementSpeed);
-		sprite.setTextureRect(sf::IntRect(counterWalking * 32, 32 * 3, 32, 32));
+		sprite.setTextureRect(sf::IntRect(counterWalking * 32, 32 * 5, 32, 32));
 		direction = 3;
 		ableToMoveDown = true;
 	}
 	if (downKeyPressed && leftKeyPressed && !upKeyPressed && !rightKeyPressed)
 	{
 		rect.move(-movementSpeed, movementSpeed);
-		sprite.setTextureRect(sf::IntRect(counterWalking * 32, 32 * 3, 32, 32));
+		sprite.setTextureRect(sf::IntRect(counterWalking * 32, 32 * 4, 32, 32));
 		direction = 4;
 		ableToMoveDown = true;
 	}

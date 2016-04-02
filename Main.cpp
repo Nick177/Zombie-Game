@@ -14,6 +14,8 @@
 using namespace sf;
 using namespace std;
 
+float calcSlope(sf::Vector2f pointA, sf::Vector2f pointB);
+
 int main(int argc, char ** argv) {
 	sf::RenderWindow renderWindow(sf::VideoMode(1366, 768), "Demo Game");
 	//renderWindow.setFramerateLimit(120);
@@ -25,6 +27,7 @@ int main(int argc, char ** argv) {
 	sf::Clock clock, zombieClock, zombieClock2;
 	sf::Time elapsed;
 
+	float slope;
 
 	//***********************************
 	//Variable to be used for boundaries
@@ -84,6 +87,7 @@ int main(int argc, char ** argv) {
 
 	p1.sprite.setPosition(sf::Vector2f(renderWindow.getSize().x / 2, renderWindow.getSize().y / 2));
 	p1.rect.setPosition(sf::Vector2f(renderWindow.getSize().x / 2, renderWindow.getSize().y / 2));
+	p1.sprite.scale(sf::Vector2f(1, 1.5));
 	//******************************
 
 	//StatusBar bar;
@@ -92,7 +96,7 @@ int main(int argc, char ** argv) {
 
 	//*****************************
 	//Enemy setup:
-	if (!zombieTexture.loadFromFile("Images/zombie2.png"))
+	if (!zombieTexture.loadFromFile("Images/zombie.png"))
 	{
 		std::cout << "Error\n";
 	}
@@ -213,21 +217,42 @@ int main(int argc, char ** argv) {
 				enemyArray[counter].setPlayerInRange(true);
 				//cout << "Within enemy range.\n";
 				
-
+				slope = calcSlope(enemyArray[counter].rect.getPosition(), p1.rect.getPosition());
 
 				if (p1.rect.getPosition().x < enemyArray[counter].rect.getPosition().x)
 				{
-					enemyArray[counter].setDirection(3);
+					if ((slope >= 0.0 && slope < (3.0 / 4.0)) || (slope <= 0 && slope > (-3.0 / 4.0)))
+						enemyArray[counter].setDirection(3);
+					else if (slope >= (3.0 / 4.0) && slope <= 1.25)
+						enemyArray[counter].setDirection(5);
+					else if (slope > 1.25)
+						enemyArray[counter].setDirection(2);
+					else if (slope < (-3.0 / 4.0))
+						enemyArray[counter].setDirection(1);
+					//enemyArray[counter].setDirection(3);
 				}
+
 				else if (p1.rect.getPosition().x > enemyArray[counter].rect.getPosition().x)
+				{
+					if ((slope >= 0.0 && slope < (3.0 / 4.0)) || (slope <= 0 && slope >(-3.0 / 4.0)))
+						enemyArray[counter].setDirection(4);
+					else if (slope <= (-3.0 / 4.0) && slope >= -1.25)
+						enemyArray[counter].setDirection(6);
+					else if (slope > 1.25)
+						enemyArray[counter].setDirection(1);
+					else if (slope < -1.25)
+						enemyArray[counter].setDirection(2);
+				}
+				/*
+				if (p1.rect.getPosition().x > enemyArray[counter].rect.getPosition().x)
 				{
 					enemyArray[counter].setDirection(4);
 				}
-				else if (p1.rect.getPosition().y < enemyArray[counter].rect.getPosition().y)
+				if (p1.rect.getPosition().y < enemyArray[counter].rect.getPosition().y)
 				{
 					enemyArray[counter].setDirection(1);
 				}
-				else if (p1.rect.getPosition().y > enemyArray[counter].rect.getPosition().y)
+				if (p1.rect.getPosition().y > enemyArray[counter].rect.getPosition().y)
 				{
 					enemyArray[counter].setDirection(2);
 				}
@@ -249,7 +274,7 @@ int main(int argc, char ** argv) {
 				else if (p1.rect.getPosition().x > enemyArray[counter].rect.getPosition().x)
 				{
 					enemyArray[counter].setDirection(4);
-				}
+				}*/
 
 				enemyArray[counter].updateMovement();
 				
@@ -354,4 +379,13 @@ int main(int argc, char ** argv) {
 		renderWindow.display();
 
 	}
+}
+
+float calcSlope(sf::Vector2f pointA, sf::Vector2f pointB)
+{
+	float slope;
+
+	slope = ((pointB.y - pointA.y) / (pointB.x - pointA.x));
+
+	return -1 * (slope);
 }
