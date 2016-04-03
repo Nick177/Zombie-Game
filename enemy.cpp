@@ -16,7 +16,7 @@ using namespace sf;
 
 Enemy::Enemy()
 {
-	movementSpeed = 0.05;
+	movementSpeed = 0.03;
 	attackDamage = 10;
 	counterWalking = 0;
 	direction = 0;
@@ -51,11 +51,10 @@ void Enemy::update()
 
 void Enemy::updateMovement()
 {
-
 	if ((direction) == 1)
 	{
 		rect.move(0, -movementSpeed); // up
-		sprite.setTextureRect(sf::IntRect(counterWalking * 64, 64 * 5, 64, 64));
+		sprite.setTextureRect(sf::IntRect(counterWalking * 64, 64 * 0, 64, 64));
 		direction = 1;
 	}
 	else if ((direction) == 2)
@@ -75,12 +74,16 @@ void Enemy::updateMovement()
 		rect.move(movementSpeed, 0);
 		sprite.setTextureRect(sf::IntRect(counterWalking * 64, 64 * 2, 64, 64));
 		direction = 4;
+		if (isPlayerInRange)
+			cout << "right" << endl;
 	}
 	else if ((direction) == 5) // down left
 	{
 		rect.move(-movementSpeed, movementSpeed); // down left
 		sprite.setTextureRect(sf::IntRect(counterWalking * 64, 64 * 3, 64, 64));
 		direction = 5;
+		if(isPlayerInRange)
+			cout << "here" << endl;
 	}
 	else if ((direction) == 6) // down right
 	{

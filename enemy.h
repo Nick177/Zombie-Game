@@ -4,6 +4,7 @@
 #define ENEMY_H
 
 #include "entity.h"
+#include<iostream>
 
 using namespace sf;
 using namespace std;
@@ -38,7 +39,6 @@ public:
 	void setDirection(int direction) { this->direction = direction; }
 	void setPlayerInRange(bool playerInRange) { this->isPlayerInRange = playerInRange; }
 	CircleShape getCircle()const { return circle; }
-
 
 };
 #endif
