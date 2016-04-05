@@ -28,7 +28,6 @@ int main(int argc, char ** argv) {
 	sf::Time elapsed;
 
 	float slope;
-
 	//***********************************
 	//Variable to be used for boundaries
 	bool borderRight,
@@ -123,6 +122,7 @@ int main(int argc, char ** argv) {
 
 			if (event.type == sf::Event::EventType::Closed)
 				renderWindow.close();
+			
 		} // end event loop
 		  //****************************************
 		  //Clears screenp
@@ -243,38 +243,7 @@ int main(int argc, char ** argv) {
 					else if (slope < -1.25)
 						enemyArray[counter].setDirection(2);
 				}
-				/*
-				if (p1.rect.getPosition().x > enemyArray[counter].rect.getPosition().x)
-				{
-					enemyArray[counter].setDirection(4);
-				}
-				if (p1.rect.getPosition().y < enemyArray[counter].rect.getPosition().y)
-				{
-					enemyArray[counter].setDirection(1);
-				}
-				if (p1.rect.getPosition().y > enemyArray[counter].rect.getPosition().y)
-				{
-					enemyArray[counter].setDirection(2);
-				}
-
-				enemyArray[counter].updateMovement();
 				
-				if (p1.rect.getPosition().y < enemyArray[counter].rect.getPosition().y)
-				{
-					enemyArray[counter].setDirection(1);
-				}
-				else if (p1.rect.getPosition().y > enemyArray[counter].rect.getPosition().y)
-				{
-					enemyArray[counter].setDirection(2);
-				}
-				else if (p1.rect.getPosition().x < enemyArray[counter].rect.getPosition().x)
-				{
-					enemyArray[counter].setDirection(3);
-				}
-				else if (p1.rect.getPosition().x > enemyArray[counter].rect.getPosition().x)
-				{
-					enemyArray[counter].setDirection(4);
-				}*/
 
 				enemyArray[counter].updateMovement();
 				
@@ -358,11 +327,15 @@ int main(int argc, char ** argv) {
 			}
 			counter++;
 		}
+		//cout << "(" << sf::Mouse::getPosition(renderWindow).x << ", ";
+		//cout << sf::Mouse::getPosition(renderWindow).y << ")" << endl;
 
 		//******************************************************************************
 		//These lines of code update the player position (basically allows player to move)
 		p1.updateMovement();
+		//p1.updateDirection(sf::Mouse::getPosition(renderWindow).x, sf::Mouse::getPosition(renderWindow).y);
 		p1.update();
+		
 		//**********************************
 		//This sets the view to our view object and centers are view object relative to our sprite
 		//In short, the camera follows our character

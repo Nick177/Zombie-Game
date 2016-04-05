@@ -21,10 +21,10 @@ void Projectile::update()
 		rect.move(0, -movementSpeed);
 	if (direction == 2) // down
 		rect.move(0, movementSpeed);
-	if (direction == 3) // right
-		rect.move(movementSpeed, 0);
-	if (direction == 4) // left
+	if (direction == 3) // left
 		rect.move(-movementSpeed, 0);
+	if (direction == 4) // right
+		rect.move(movementSpeed, 0);
 
 	distance += movementSpeed;
 }

@@ -7,6 +7,7 @@
 class Player : public Entity
 {
 private:
+	bool isMoving;
 	float health;
 	bool isAlive;
 	float movementSpeed;
@@ -26,7 +27,12 @@ public:
 
 	Player();
 	void update();
-	void updateMovement();//int mX, int mY);
+	
+	void updateMovement();
+	/*int mX, int mY);
+	void updateDirection(int mX, int mY);
+	void setDirection(int direction);
+	*/
 
 	float getMovementSpeed() const { return movementSpeed; }
 	int getDirection() const { return direction; }
@@ -45,6 +51,7 @@ public:
 
 	void setMovementSpeed(float movementSpeed) { this->movementSpeed = movementSpeed; }
 	void healthReduction(float damageTaken);
+
 };
 
 #endif
