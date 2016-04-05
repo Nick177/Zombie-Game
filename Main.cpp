@@ -10,6 +10,7 @@
 //#include "statusBar.h"
 #include "healthBar.h"
 #include <random>
+#include "textDisplay.h"
 
 using namespace sf;
 using namespace std;
@@ -112,6 +113,20 @@ int main(int argc, char ** argv) {
 
 	int enemiesJustDefeated = 0;
 	//*****************************
+	Font font;
+	if (!font.loadFromFile("consola.ttf"))
+		return EXIT_FAILURE;
+	
+	//Text vector Array
+	vector<TextDisplay>::const_iterator textIter;
+	vector<TextDisplay> textDisplayArray;
+
+	//Text display object
+	TextDisplay text1;
+	//text1.text.setPosition(300, 300);
+	text1.text.setFont(font);
+	//textDisplayArray.push_back(text1);
+
 
 	//**************************************************
 	//Main Game Loop:
@@ -196,10 +211,10 @@ int main(int argc, char ** argv) {
 
 		//*************************************************************
 		// Creating a new enemy every 2 seconds
-		if (zombieClock.getElapsedTime().asMilliseconds() == 5000 /*&& (enemyArray.size() < 10)*/)
+		if (zombieClock.getElapsedTime().asMilliseconds() >= 5000 /*&& (enemyArray.size() < 10)*/)
 		{
 			enemy1.rect.setPosition(enemy1.randomPositionX(renderWindow.getSize().x),
-			enemy1.randomPositionY(renderWindow.getSize().y));
+									enemy1.randomPositionY(renderWindow.getSize().y));
 
 			enemyArray.emplace_back(enemy1);
 			zombieClock.restart();
@@ -215,7 +230,6 @@ int main(int argc, char ** argv) {
 			if (enemyArray[counter].getCircle().getGlobalBounds().intersects(p1.rect.getGlobalBounds()))
 			{
 				enemyArray[counter].setPlayerInRange(true);
-				//cout << "Within enemy range.\n";
 				
 				slope = calcSlope(enemyArray[counter].rect.getPosition(), p1.rect.getPosition());
 
@@ -229,7 +243,6 @@ int main(int argc, char ** argv) {
 						enemyArray[counter].setDirection(2);
 					else if (slope < (-3.0 / 4.0))
 						enemyArray[counter].setDirection(1);
-					//enemyArray[counter].setDirection(3);
 				}
 
 				else if (p1.rect.getPosition().x > enemyArray[counter].rect.getPosition().x)
@@ -243,39 +256,7 @@ int main(int argc, char ** argv) {
 					else if (slope < -1.25)
 						enemyArray[counter].setDirection(2);
 				}
-				/*
-				if (p1.rect.getPosition().x > enemyArray[counter].rect.getPosition().x)
-				{
-					enemyArray[counter].setDirection(4);
-				}
-				if (p1.rect.getPosition().y < enemyArray[counter].rect.getPosition().y)
-				{
-					enemyArray[counter].setDirection(1);
-				}
-				if (p1.rect.getPosition().y > enemyArray[counter].rect.getPosition().y)
-				{
-					enemyArray[counter].setDirection(2);
-				}
-
-				enemyArray[counter].updateMovement();
 				
-				if (p1.rect.getPosition().y < enemyArray[counter].rect.getPosition().y)
-				{
-					enemyArray[counter].setDirection(1);
-				}
-				else if (p1.rect.getPosition().y > enemyArray[counter].rect.getPosition().y)
-				{
-					enemyArray[counter].setDirection(2);
-				}
-				else if (p1.rect.getPosition().x < enemyArray[counter].rect.getPosition().x)
-				{
-					enemyArray[counter].setDirection(3);
-				}
-				else if (p1.rect.getPosition().x > enemyArray[counter].rect.getPosition().x)
-				{
-					enemyArray[counter].setDirection(4);
-				}*/
-
 				enemyArray[counter].updateMovement();
 				
 			}
@@ -285,8 +266,9 @@ int main(int argc, char ** argv) {
 				enemyArray[counter].updateMovement();
 
 			}
-			//window.draw(enemyArray[counter].rect);
-			renderWindow.draw(enemyArray[counter].getCircle());
+
+			//Draws the circle around the enemy
+			//renderWindow.draw(enemyArray[counter].getCircle());
 
 			renderWindow.draw(enemyArray[counter].sprite);
 
@@ -310,6 +292,11 @@ int main(int argc, char ** argv) {
 			{
 				if (projectileArray[counter].rect.getGlobalBounds().intersects(enemyArray[counter2].rect.getGlobalBounds()))
 				{
+					//Text Display damage taken by the enemy
+					text1.text.setString(to_string(projectileArray[counter].getAttackDamage()));
+					text1.text.setPosition(enemyArray[counter2].rect.getPosition().x, enemyArray[counter2].rect.getPosition().y);
+					textDisplayArray.push_back(text1);
+
 					projectileArray[counter].canDestroy(true);
 					enemyArray[counter2].setHP(projectileArray[counter].getAttackDamage());// -= projectileArray[counter].attackDamage;
 					if (enemyArray[counter2].getHP() <= 0.0)
@@ -350,10 +337,20 @@ int main(int argc, char ** argv) {
 		{
 			if (projectileArray[counter].isDestroyed())
 			{
-				//swapToLast(projectileArray, counter);
 				projectileArray.erase(iter);
 				projCounter--;
 				//std::cout << "Delete!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11" << std::endl;
+				break;
+			}
+			counter++;
+		}
+		// Delete Text Display
+		counter = 0;
+		for (textIter = textDisplayArray.begin(); textIter != textDisplayArray.end(); textIter++)
+		{
+			if (textDisplayArray[counter].getDestroy())
+			{
+				textDisplayArray.erase(textIter);
 				break;
 			}
 			counter++;
@@ -375,6 +372,14 @@ int main(int argc, char ** argv) {
 		hBar.barOutline.setPosition(hBar.barRect.getPosition());
 		renderWindow.draw(hBar.barRect);
 		renderWindow.draw(hBar.barOutline);
+
+		counter = 0;
+		for (textIter = textDisplayArray.begin(); textIter != textDisplayArray.end(); textIter++)
+		{
+			textDisplayArray[counter].update();
+			renderWindow.draw(textDisplayArray[counter].text);
+			counter++;
+		}
 
 		renderWindow.display();
 

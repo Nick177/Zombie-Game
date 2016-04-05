@@ -21,7 +21,7 @@ Enemy::Enemy()
 	counterWalking = 0;
 	direction = 0;
 	counter = 0;
-	hp = 5;
+	hp = 15;
 	alive = true;
 
 	rect.setSize(sf::Vector2f(60, 64));
@@ -31,7 +31,7 @@ Enemy::Enemy()
 	sprite.setTextureRect(IntRect(0, 0, 64, 64));
 
 
-	circle.setRadius(100);
+	circle.setRadius(150);
 	circle.setFillColor(sf::Color::Red);
 
 	offset = 35 - (circle.getRadius());
@@ -140,10 +140,4 @@ int Enemy::randomPositionY(int y)
 	random_device randomNumber;
 
 	return positionY(randomNumber);
-}
-void chase()
-{
-
-
-
 }
