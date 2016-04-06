@@ -21,7 +21,7 @@ Enemy::Enemy()
 	counterWalking = 0;
 	direction = 0;
 	counter = 0;
-	hp = 5;
+	hp = 15;
 	alive = true;
 
 	rect.setSize(sf::Vector2f(60, 64));
@@ -31,7 +31,7 @@ Enemy::Enemy()
 	sprite.setTextureRect(IntRect(0, 0, 64, 64));
 
 
-	circle.setRadius(100);
+	circle.setRadius(150);
 	circle.setFillColor(sf::Color::Red);
 
 	offset = 35 - (circle.getRadius());
@@ -63,33 +63,33 @@ void Enemy::updateMovement()
 		sprite.setTextureRect(sf::IntRect(counterWalking * 64, 0, 64, 64));
 		direction = 2;
 	}
-	else if ((direction) == 3) // left
+	else if ((direction) == 3) // right
 	{
 		rect.move(-movementSpeed, 0);
-		sprite.setTextureRect(sf::IntRect(counterWalking * 64, 64 * 1, 64, 64));
+		sprite.setTextureRect(sf::IntRect(counterWalking * 64, 64 * 2, 64, 64));
 		direction = 3;
 	}
-	else if ((direction) == 4) // right
+	else if ((direction) == 4) // left
 	{
 		rect.move(movementSpeed, 0);
-		sprite.setTextureRect(sf::IntRect(counterWalking * 64, 64 * 2, 64, 64));
+		sprite.setTextureRect(sf::IntRect(counterWalking * 64, 64 * 1, 64, 64));
 		direction = 4;
-		if (isPlayerInRange)
-			cout << "right" << endl;
+		
 	}
 	else if ((direction) == 5) // down left
 	{
 		rect.move(-movementSpeed, movementSpeed); // down left
 		sprite.setTextureRect(sf::IntRect(counterWalking * 64, 64 * 3, 64, 64));
 		direction = 5;
-		if(isPlayerInRange)
-			cout << "here" << endl;
+		cout << "Left\n";
+		
 	}
 	else if ((direction) == 6) // down right
 	{
 		rect.move(movementSpeed, movementSpeed);
 		sprite.setTextureRect(sf::IntRect(counterWalking * 64, 64 * 4, 64, 64));
 		direction = 6;
+		cout << "Right\n";
 	}
 	else
 	{
@@ -141,9 +141,23 @@ int Enemy::randomPositionY(int y)
 
 	return positionY(randomNumber);
 }
-void chase()
+
+void Enemy::changeDirection(float ang)
 {
-
-
-
+	if (ang > 110 && ang < 160)
+		direction = 1;
+	if (ang > 20 && ang < 70)
+		direction = 1;
+	if (ang > 200 && ang < 250)
+		direction = 5;
+	if (ang > 290 && ang < 340)
+		direction = 6;
+	if (ang >= 340 || ang <= 20)
+		direction = 3;
+	if (ang >= 70 && ang <= 110)
+		direction = 1;
+	if (ang >= 160 && ang <= 200)
+		direction = 4;
+	if (ang >= 250 && ang <= 290)
+		direction = 2;
 }
