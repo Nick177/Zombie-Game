@@ -13,7 +13,7 @@ private:
 	const static int projectileLimit = 20;
 	bool destroy;
 	double distance;
-	float damage;
+	int damage;
 public:
 	Projectile();
 	void update();
@@ -23,7 +23,7 @@ public:
 	int getDirection() const { return direction; }
 	bool isDestroyed() const { return destroy; }
 	double getDistance() const { return distance; }
-	float getAttackDamage() const { return damage; }
+	int getAttackDamage() const { return damage; }
 
 	void setMovementSpeed(float movementSpeed) { this->movementSpeed = movementSpeed; }
 	void setProjLifeTime(float time) { projLifeTime = time; }

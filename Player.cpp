@@ -4,7 +4,7 @@ Player::Player()
 	isMoving = false;
 	health = 100.0;
 	isAlive = true;
-	movementSpeed = 0.3;
+	movementSpeed = 0.5;
 	counterWalking = 0;
 	direction = 0;
 
@@ -58,7 +58,7 @@ void Player::updateMovement()//int mX, int mY)
 		isMoving = true;
 		rect.move(movementSpeed, movementSpeed);
 		sprite.setTextureRect(sf::IntRect(counterWalking * 32, 32 * 5, 32, 32));
-		direction = 3;
+		direction = 6;
 		ableToMoveDown = true;
 	}
 	else if (downKeyPressed && leftKeyPressed && !upKeyPressed && !rightKeyPressed)
@@ -66,7 +66,7 @@ void Player::updateMovement()//int mX, int mY)
 		isMoving = true;
 		rect.move(-movementSpeed, movementSpeed);
 		sprite.setTextureRect(sf::IntRect(counterWalking * 32, 32 * 4, 32, 32));
-		direction = 4;
+		direction = 5;
 		ableToMoveDown = true;
 	}
 
@@ -91,7 +91,7 @@ void Player::updateMovement()//int mX, int mY)
 		isMoving = true;
 		rect.move(movementSpeed, 0);
 		sprite.setTextureRect(sf::IntRect(counterWalking * 32, 32 * 2, 32, 32));
-		direction = 4;
+		direction = 3;
 		ableToMoveLeft = true;
 	}
 	else if (leftKeyPressed && ableToMoveLeft && !rightKeyPressed && !upKeyPressed && !downKeyPressed)//sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && ableToMoveLeft)
@@ -99,7 +99,7 @@ void Player::updateMovement()//int mX, int mY)
 		isMoving = true;
 		rect.move(-(movementSpeed), 0);
 		sprite.setTextureRect(sf::IntRect(counterWalking * 32, 32 * 1, 32, 32));
-		direction = 3;
+		direction = 4;
 		ableToMoveRight = true;
 	}
 	else

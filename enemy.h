@@ -17,7 +17,7 @@ private:
 	int counterWalking;
 	int direction; // 1 - up, 2 - down, 3 - left, 4 - right
 	int counter;
-	float hp;
+	int hp;
 	bool alive;
 	int offset;
 	CircleShape circle;
@@ -39,6 +39,8 @@ public:
 	void setDirection(int direction) { this->direction = direction; }
 	void setPlayerInRange(bool playerInRange) { this->isPlayerInRange = playerInRange; }
 	CircleShape getCircle()const { return circle; }
+	float getMovementSpeed() const { return movementSpeed; }
+	void changeDirection(float ang);
 
 };
 #endif

@@ -6,7 +6,7 @@ Projectile::Projectile()
 	rect.setPosition(0, 0);
 	rect.setFillColor(sf::Color::Green);
 
-	movementSpeed = 0.5;
+	movementSpeed = 0.7;
 	projLifeTime = 2.0;
 	direction = 0;
 	destroy = false;
@@ -21,10 +21,14 @@ void Projectile::update()
 		rect.move(0, -movementSpeed);
 	if (direction == 2) // down
 		rect.move(0, movementSpeed);
-	if (direction == 3) // left
-		rect.move(-movementSpeed, 0);
-	if (direction == 4) // right
+	if (direction == 3) // right
 		rect.move(movementSpeed, 0);
+	if (direction == 4) // left
+		rect.move(-movementSpeed, 0);
+	if (direction == 5) // down left
+		rect.move(-movementSpeed, movementSpeed);
+	if (direction == 6) // down right
+		rect.move(movementSpeed, movementSpeed);
 
 	distance += movementSpeed;
 }

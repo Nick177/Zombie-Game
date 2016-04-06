@@ -7,14 +7,18 @@
 #include "Player.h"
 #include "projectile.h"
 #include "enemy.h"
-//#include "statusBar.h"
 #include "healthBar.h"
 #include <random>
+#include "textDisplay.h"
 
 using namespace sf;
 using namespace std;
 
 float calcSlope(sf::Vector2f pointA, sf::Vector2f pointB);
+float calcAng(sf::Vector2f pointA, sf::Vector2f pointB);
+Vector2f normalize(const Vector2f& source);
+
+sf::Vector2f zombieDirection;
 
 int main(int argc, char ** argv) {
 	sf::RenderWindow renderWindow(sf::VideoMode(1366, 768), "Demo Game");
@@ -26,6 +30,8 @@ int main(int argc, char ** argv) {
 	sf::Texture texture, zombieTexture;
 	sf::Clock clock, zombieClock, zombieClock2;
 	sf::Time elapsed;
+
+	float angle;
 
 	float slope;
 	//***********************************
@@ -111,6 +117,20 @@ int main(int argc, char ** argv) {
 
 	int enemiesJustDefeated = 0;
 	//*****************************
+	Font font;
+	if (!font.loadFromFile("consola.ttf"))
+		return EXIT_FAILURE;
+	
+	//Text vector Array
+	vector<TextDisplay>::const_iterator textIter;
+	vector<TextDisplay> textDisplayArray;
+
+	//Text display object
+	TextDisplay text1;
+	//text1.text.setPosition(300, 300);
+	text1.text.setFont(font);
+	//textDisplayArray.push_back(text1);
+
 
 	//**************************************************
 	//Main Game Loop:
@@ -196,10 +216,10 @@ int main(int argc, char ** argv) {
 
 		//*************************************************************
 		// Creating a new enemy every 2 seconds
-		if (zombieClock.getElapsedTime().asMilliseconds() == 5000 /*&& (enemyArray.size() < 10)*/)
+		if (zombieClock.getElapsedTime().asMilliseconds() >= 5000 /*&& (enemyArray.size() < 10)*/)
 		{
 			enemy1.rect.setPosition(enemy1.randomPositionX(renderWindow.getSize().x),
-			enemy1.randomPositionY(renderWindow.getSize().y));
+									enemy1.randomPositionY(renderWindow.getSize().y));
 
 			enemyArray.emplace_back(enemy1);
 			zombieClock.restart();
@@ -215,8 +235,28 @@ int main(int argc, char ** argv) {
 			if (enemyArray[counter].getCircle().getGlobalBounds().intersects(p1.rect.getGlobalBounds()))
 			{
 				enemyArray[counter].setPlayerInRange(true);
-				//cout << "Within enemy range.\n";
+
+				zombieDirection = normalize(p1.sprite.getPosition() - enemyArray[counter].sprite.getPosition());
 				
+				enemyArray[counter].rect.move(enemyArray[counter].getMovementSpeed() * zombieDirection);
+				
+				angle = calcAng(enemyArray[counter].rect.getPosition(), p1.rect.getPosition());
+
+				if (p1.rect.getPosition().x < enemyArray[counter].rect.getPosition().x
+					&& p1.rect.getPosition().y < enemyArray[counter].rect.getPosition().y)
+					angle  =180 - angle;
+				else if (p1.rect.getPosition().x < enemyArray[counter].rect.getPosition().x
+					&& p1.rect.getPosition().y > enemyArray[counter].rect.getPosition().y)
+					angle = (180 + 90) - angle;
+				else if (p1.rect.getPosition().x > enemyArray[counter].rect.getPosition().x
+					&& p1.rect.getPosition().y > enemyArray[counter].rect.getPosition().y)
+					angle = 360 - angle;
+				else
+					angle += 0;
+
+				enemyArray[counter].changeDirection(angle);
+
+				/*
 				slope = calcSlope(enemyArray[counter].rect.getPosition(), p1.rect.getPosition());
 
 				if (p1.rect.getPosition().x < enemyArray[counter].rect.getPosition().x)
@@ -229,7 +269,6 @@ int main(int argc, char ** argv) {
 						enemyArray[counter].setDirection(2);
 					else if (slope < (-3.0 / 4.0))
 						enemyArray[counter].setDirection(1);
-					//enemyArray[counter].setDirection(3);
 				}
 
 				else if (p1.rect.getPosition().x > enemyArray[counter].rect.getPosition().x)
@@ -243,9 +282,11 @@ int main(int argc, char ** argv) {
 					else if (slope < -1.25)
 						enemyArray[counter].setDirection(2);
 				}
-				
+				*/
 
 				enemyArray[counter].updateMovement();
+
+				//cout << angle << endl;
 				
 			}
 			else
@@ -254,8 +295,9 @@ int main(int argc, char ** argv) {
 				enemyArray[counter].updateMovement();
 
 			}
-			//window.draw(enemyArray[counter].rect);
-			renderWindow.draw(enemyArray[counter].getCircle());
+
+			//Draws the circle around the enemy
+			//renderWindow.draw(enemyArray[counter].getCircle());
 
 			renderWindow.draw(enemyArray[counter].sprite);
 
@@ -279,6 +321,11 @@ int main(int argc, char ** argv) {
 			{
 				if (projectileArray[counter].rect.getGlobalBounds().intersects(enemyArray[counter2].rect.getGlobalBounds()))
 				{
+					//Text Display damage taken by the enemy
+					text1.text.setString(to_string(projectileArray[counter].getAttackDamage()));
+					text1.text.setPosition(enemyArray[counter2].rect.getPosition().x, enemyArray[counter2].rect.getPosition().y);
+					textDisplayArray.push_back(text1);
+
 					projectileArray[counter].canDestroy(true);
 					enemyArray[counter2].setHP(projectileArray[counter].getAttackDamage());// -= projectileArray[counter].attackDamage;
 					if (enemyArray[counter2].getHP() <= 0.0)
@@ -319,7 +366,6 @@ int main(int argc, char ** argv) {
 		{
 			if (projectileArray[counter].isDestroyed())
 			{
-				//swapToLast(projectileArray, counter);
 				projectileArray.erase(iter);
 				projCounter--;
 				//std::cout << "Delete!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11" << std::endl;
@@ -327,9 +373,21 @@ int main(int argc, char ** argv) {
 			}
 			counter++;
 		}
-		//cout << "(" << sf::Mouse::getPosition(renderWindow).x << ", ";
-		//cout << sf::Mouse::getPosition(renderWindow).y << ")" << endl;
 
+
+		// Delete Text Display
+
+
+		counter = 0;
+		for (textIter = textDisplayArray.begin(); textIter != textDisplayArray.end(); textIter++)
+		{
+			if (textDisplayArray[counter].getDestroy())
+			{
+				textDisplayArray.erase(textIter);
+				break;
+			}
+			counter++;
+		}
 		//******************************************************************************
 		//These lines of code update the player position (basically allows player to move)
 		p1.updateMovement();
@@ -349,6 +407,14 @@ int main(int argc, char ** argv) {
 		renderWindow.draw(hBar.barRect);
 		renderWindow.draw(hBar.barOutline);
 
+		counter = 0;
+		for (textIter = textDisplayArray.begin(); textIter != textDisplayArray.end(); textIter++)
+		{
+			textDisplayArray[counter].update();
+			renderWindow.draw(textDisplayArray[counter].text);
+			counter++;
+		}
+
 		renderWindow.display();
 
 	}
@@ -361,4 +427,28 @@ float calcSlope(sf::Vector2f pointA, sf::Vector2f pointB)
 	slope = ((pointB.y - pointA.y) / (pointB.x - pointA.x));
 
 	return -1 * (slope);
+}
+Vector2f normalize(const Vector2f& source)
+{
+	float length = sqrt((source.x * source.x) + (source.y * source.y));
+	if (length != 0)
+		return Vector2f(source.x / length, source.y / length);
+	else
+		return source;
+}
+
+float calcAng(sf::Vector2f pointA, sf::Vector2f pointB)
+{
+	float angle;
+	float x, y, z;
+
+	x = abs(pointA.x - pointB.x);
+	y = abs(pointA.y - pointB.y);
+
+	angle = atanf(y / x) * 180 / 3.14;
+
+	cout << angle << endl;
+
+	return angle;
+	
 }
